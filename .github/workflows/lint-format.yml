@@ -33,4 +33,4 @@ jobs:
         run: pnpm format
 
       - name: Check linting
-        run: pnpm lint
+        run: pnpm lint:check

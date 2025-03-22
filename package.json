@@ -11,6 +11,7 @@
     "install-plugin1": "pnpm --filter @my-monorepo/plugin1 install-plugin",
     "format": "biome format --write packages --diagnostic-level=info",
     "lint": "biome lint --write packages --diagnostic-level=info",
+    "lint:check": "biome lint --write packages --diagnostic-level=error",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
