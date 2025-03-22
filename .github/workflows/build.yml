@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Node.js (using the version specified in your project)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Matches your Node.js version (16.20.2)
+
+      # Set up PNPM
+      - name: Set up PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.5 # Matches your packageManager (pnpm@10.6.5)
+
+      # Install dependencies
+      - name: Install dependencies
+        run: pnpm install
+
+      # Run the build script
+      - name: Build
+        run: pnpm build
