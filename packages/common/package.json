@@ -1,18 +1,17 @@
 {
-  "name": "common",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "@my-monorepo/common",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsc",
+    "watch": "tsc --watch"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.6.5",
   "devDependencies": {
-    "typescript": "~5.6.2",
-    "vite": "^6.0.1",
-    "vite-plugin-dts": "^4.3.0"
-  },
-  "main": "./dist/common.js",
-  "types": "./dist/main.d.ts"
+    "typescript": "^5.8.2"
+  }
 }
