@@ -1,6 +1,6 @@
 import {
-  App,
-  Editor,
+  type App,
+  type Editor,
   MarkdownView,
   Modal,
   Notice,
