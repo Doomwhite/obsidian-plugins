@@ -9,8 +9,8 @@
     "build:plugin1": "pnpm --filter @my-monorepo/plugin1 build",
     "dev:plugin1": "pnpm --filter @my-monorepo/plugin1 dev",
     "install-plugin1": "pnpm --filter @my-monorepo/plugin1 install-plugin",
-    "format": "biome format --write packages",
-    "lint": "biome lint --write packages",
+    "format": "biome format --write packages --diagnostic-level=info",
+    "lint": "biome lint --write packages --diagnostic-level=info",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
