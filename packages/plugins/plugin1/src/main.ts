@@ -8,7 +8,7 @@ import {
   PluginSettingTab,
   Setting,
 } from 'obsidian';
-import { sharedFunction } from '@obsidian-plugins/common';
+import { sharedFunction } from '@doomwhite-obsidian-plugins/common';
 
 // Remember to rename these classes and interfaces!
 

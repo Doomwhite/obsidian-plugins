@@ -20,7 +20,7 @@ importers:
 
   packages/plugins/plugin1:
     dependencies:
-      '@obsidian-plugins/common':
+      '@doomwhite-obsidian-plugins/common':
         specifier: workspace:*
         version: link:../../common
     devDependencies:

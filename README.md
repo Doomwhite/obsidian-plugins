@@ -1,4 +1,4 @@
-# @obsidian-plugins/obsidian-plugins
+# @doomwhite-obsidian-plugins
 
 A monorepo for building and managing Obsidian plugins using TypeScript, PNPM, and Biome.
 
@@ -7,8 +7,8 @@ A monorepo for building and managing Obsidian plugins using TypeScript, PNPM, an
 This project is a monorepo containing multiple Obsidian plugins and shared utilities. It uses PNPM for dependency management, TypeScript for type safety, and Biome for linting and formatting. The monorepo structure allows for shared code between plugins while maintaining separate builds for each plugin.
 
 ### Packages
-- **`@obsidian-plugins/common`**: A shared utility library used by the plugins.
-- **`@obsidian-plugins/plugin1`**: An example Obsidian plugin.
+- **`@doomwhite-obsidian-plugins/common`**: A shared utility library used by the plugins.
+- **`@doomwhite-obsidian-plugins/plugin1`**: An example Obsidian plugin.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ This project is a monorepo containing multiple Obsidian plugins and shared utili
 ### 1. Clone the Repository
 ```bash
 git clone <repository-url>
-cd obsidian-plugins
+cd doomwhite-obsidian-plugins
 ```
 
 ### 2. Install Dependencies
@@ -71,14 +71,14 @@ pnpm lint:check
 ## Project Structure
 
 ```
-obsidian-plugins/
+doomwhite-obsidian-plugins/
 ├── packages/
-│   ├── common/               # Shared utilities (@obsidian-plugins/common)
+│   ├── common/               # Shared utilities (@doomwhite-obsidian-plugins/common)
 │   │   ├── src/
 │   │   │   └── index.ts
 │   │   └── package.json
 │   └── plugins/
-│       └── plugin1/          # Example plugin (@obsidian-plugins/plugin1)
+│       └── plugin1/          # Example plugin (@doomwhite-obsidian-plugins/plugin1)
 │           ├── src/
 │           │   └── main.ts
 │           └── package.json
