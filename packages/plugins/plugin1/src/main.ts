@@ -8,25 +8,41 @@ import {
   PluginSettingTab,
   Setting,
 } from 'obsidian';
-import { sharedFunction } from '@doomwhite-obsidian-plugins/common';
+import {
+  LogLevel,
+  NullException,
+  sharedFunction,
+} from '@doomwhite-obsidian-plugins/common';
+import PluginUtils from '@doomwhite-obsidian-plugins/common/src/plugin-utils';
+import type { Logger } from '@doomwhite-obsidian-plugins/common/src/logging';
 
 // Remember to rename these classes and interfaces!
 
 interface MyPluginSettings {
+  logLevel: LogLevel;
   mySetting: string;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
+  logLevel: LogLevel.Info,
   mySetting: 'default',
 };
 
-export default class MyPlugin extends Plugin {
+export default class MyPlugin extends Plugin implements Logger {
   settings: MyPluginSettings;
+  utils!: PluginUtils;
 
   async onload() {
-    console.log('Loading Plugin1');
-    sharedFunction();
     await this.loadSettings();
+    if (!this.utils) throw new NullException('this.utils');
+
+    console.log('Loading Plugin1');
+    this.trace('Trace', true);
+    this.debug('Debug', true);
+    this.info('Info', true);
+    this.warn('onload', 'Warn');
+    this.error('onload', 'Error');
+    sharedFunction();
 
     // This creates an icon in the left ribbon.
     const ribbonIconEl = this.addRibbonIcon(
@@ -101,10 +117,56 @@ export default class MyPlugin extends Plugin {
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    this.utils = new PluginUtils(
+      'PropertyEditorPlugin',
+      this.settings.logLevel,
+      this,
+    );
   }
 
   async saveSettings() {
     await this.saveData(this.settings);
+    this.updateLogLevel(this.settings.logLevel);
+  }
+
+  protected updateLogLevel(logLevel: LogLevel): void {
+    this.utils.updateLogLevel(logLevel);
+  }
+
+  toast(logLevel: LogLevel, message: string, duration?: number): void {
+    this.utils.toast(logLevel, message);
+  }
+
+  trace(
+    message: unknown | unknown[],
+    showToast?: boolean,
+    duration?: number,
+  ): void {
+    this.utils.trace(message, showToast, duration);
+  }
+
+  debug(
+    message: unknown | unknown[],
+    showToast?: boolean,
+    duration?: number,
+  ): void {
+    this.utils.debug(message, showToast, duration);
+  }
+
+  info(
+    message: unknown | unknown[],
+    showToast?: boolean,
+    duration?: number,
+  ): void {
+    this.utils.info(message, showToast, duration);
+  }
+
+  warn(methodName: string, error: unknown): void {
+    this.utils.warn(methodName, error);
+  }
+
+  error(methodName: string, error: unknown): void {
+    this.utils.error(methodName, error);
   }
 }
 

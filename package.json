@@ -5,14 +5,13 @@
   "main": "index.js",
   "scripts": {
     "build": "pnpm -r build",
+    "dev:common": "pnpm --filter @doomwhite-obsidian-plugins/common dev",
     "build:common": "pnpm --filter @doomwhite-obsidian-plugins/common build",
-    "build:plugin1": "pnpm --filter @doomwhite-obsidian-plugins/plugin1 build",
     "dev:plugin1": "pnpm --filter @doomwhite-obsidian-plugins/plugin1 dev",
-    "install-plugin1": "pnpm --filter @doomwhite-obsidian-plugins/plugin1 install-plugin",
+    "build:plugin1": "pnpm --filter @doomwhite-obsidian-plugins/plugin1 build",
     "format": "biome format --write packages --diagnostic-level=info",
     "lint": "biome lint --write packages --diagnostic-level=info",
-    "lint:check": "biome lint --write packages --diagnostic-level=error",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint:check": "biome lint --write packages --diagnostic-level=error"
   },
   "keywords": [
     "obsidian",
