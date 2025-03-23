@@ -1,5 +1,5 @@
 {
-  "name": "@obsidian-plugins/obsidian-plugins",
+  "name": "@obsidian-plugins/main",
   "version": "1.0.0",
   "description": "Monorepo for Obsidian plugins",
   "main": "index.js",
