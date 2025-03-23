@@ -19,7 +19,7 @@ This project is a monorepo containing multiple Obsidian plugins and shared utili
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/Doomwhite/obsidian-plugins
 cd doomwhite-obsidian-plugins
 ```
 
