@@ -20,7 +20,7 @@ importers:
 
   packages/plugins/plugin1:
     dependencies:
-      '@my-monorepo/common':
+      '@obsidian-plugins/common':
         specifier: workspace:*
         version: link:../../common
     devDependencies:

@@ -1,4 +1,4 @@
-# @my-monorepo/obsidian-plugins
+# @obsidian-plugins/obsidian-plugins
 
 A monorepo for building and managing Obsidian plugins using TypeScript, PNPM, and Biome.
 
@@ -7,8 +7,8 @@ A monorepo for building and managing Obsidian plugins using TypeScript, PNPM, an
 This project is a monorepo containing multiple Obsidian plugins and shared utilities. It uses PNPM for dependency management, TypeScript for type safety, and Biome for linting and formatting. The monorepo structure allows for shared code between plugins while maintaining separate builds for each plugin.
 
 ### Packages
-- **`@my-monorepo/common`**: A shared utility library used by the plugins.
-- **`@my-monorepo/plugin1`**: An example Obsidian plugin.
+- **`@obsidian-plugins/common`**: A shared utility library used by the plugins.
+- **`@obsidian-plugins/plugin1`**: An example Obsidian plugin.
 
 ## Prerequisites
 
@@ -73,12 +73,12 @@ pnpm lint:check
 ```
 obsidian-plugins/
 ├── packages/
-│   ├── common/               # Shared utilities (@my-monorepo/common)
+│   ├── common/               # Shared utilities (@obsidian-plugins/common)
 │   │   ├── src/
 │   │   │   └── index.ts
 │   │   └── package.json
 │   └── plugins/
-│       └── plugin1/          # Example plugin (@my-monorepo/plugin1)
+│       └── plugin1/          # Example plugin (@obsidian-plugins/plugin1)
 │           ├── src/
 │           │   └── main.ts
 │           └── package.json
