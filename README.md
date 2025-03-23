@@ -1,10 +1,3 @@
-Let’s create a comprehensive `README.md` for your project, `@my-monorepo/obsidian-plugins`. The README will provide an overview of the project, setup instructions, script usage, and contribution guidelines. It will reflect the monorepo structure, the use of Biome for linting and formatting, and the workflows you’ve set up for GitHub Actions.
-
----
-
-### `README.md`
-
-```markdown
 # @my-monorepo/obsidian-plugins
 
 A monorepo for building and managing Obsidian plugins using TypeScript, PNPM, and Biome.
@@ -97,4 +90,3 @@ obsidian-plugins/
 ├── package.json
 ├── pnpm-lock.yaml
 └── pnpm-workspace.yaml       # PNPM workspace configuration
-```
