@@ -1,3 +1,4 @@
+import { App } from 'obsidian';
 export declare enum LogLevel {
     Trace = 0,
     Debug = 1,
@@ -5,33 +6,56 @@ export declare enum LogLevel {
     Warn = 3,
     Error = 4
 }
-export interface Logger {
-    toast(logLevel: LogLevel, message: unknown | unknown[], duration?: number): void;
-    trace(message: unknown | unknown[], showToast?: boolean, duration?: number): void;
-    info(message: unknown | unknown[], showToast?: boolean, duration?: number): void;
-    debug(message: unknown | unknown[], showToast?: boolean, duration?: number): void;
-    warn(methodName: string, error: unknown): void;
-    error(methodName: string, error: unknown): void;
+export interface ILogger {
+    log: Logger;
+    createLogger(logLevel: LogLevel): void;
 }
-export default class LoggerImpl implements Logger {
-    private readonly name;
-    private logLevel;
-    private static readonly STYLES;
-    private static readonly DEFAULT_DURATIONS;
-    constructor(name: string, logLevel: LogLevel);
-    updateLogLevel(logLevel: LogLevel): void;
-    toast(logLevel: LogLevel, message: unknown | unknown[], duration?: number): void;
-    trace(message: unknown | unknown[], showToast?: boolean, duration?: number): void;
-    debug(message: unknown | unknown[], showToast?: boolean, duration?: number): void;
-    info(message: unknown | unknown[], showToast?: boolean, duration?: number): void;
-    warn(methodName: string, error: unknown): void;
-    error(methodName: string, error: unknown): void;
-    private log;
-    private handleError;
-    private consoleLog;
-    private getStyleString;
-    private createToastFragment;
-    private createStyledNameElement;
+export declare class LoggerBuilder {
+    private _name;
+    private _minLogLevel;
+    private _showToastDefaults;
+    private _app;
+    constructor(app: App);
+    name(value: string): this;
+    logLevel(value: LogLevel): this;
+    showToastDefault(level: LogLevel, show: boolean): this;
+    build(): Logger;
+}
+export declare class Logger {
+    private _app;
+    private _name;
+    private _minLogLevel;
+    private _showToastDefaults;
+    constructor(app: App, name: string, minLogLevel: LogLevel, showToastDefaults: Partial<Record<LogLevel, boolean>>);
+    trace(message: string): void;
+    trace(): LogBuilder;
+    debug(message: string): void;
+    debug(): LogBuilder;
+    info(message: string): void;
+    info(): LogBuilder;
+    warn(message: string): void;
+    warn(): LogBuilder;
+    error(message: string): void;
+    error(): LogBuilder;
+}
+export declare class LogBuilder {
+    private _app;
+    private _name;
+    private _level;
+    private _minLogLevel;
+    private _methodName;
+    private _values;
+    private _error;
+    private _showToast;
+    private _duration;
+    private _formatting;
+    constructor(app: App, name: string, level: LogLevel, minLogLevel: LogLevel, defaultShowToast?: boolean);
+    method(value: string): this;
+    values(...args: unknown[]): this;
+    error(err: unknown): this;
+    showToast(value: boolean): this;
+    duration(value: number): this;
+    formatting(value: string): this;
+    execute(...messages: unknown[]): void;
     private formatMessage;
-    private getErrorMessage;
 }

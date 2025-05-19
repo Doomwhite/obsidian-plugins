@@ -8,10 +8,14 @@ import {
   PluginSettingTab,
   Setting,
 } from 'obsidian';
-import { LogLevel, sharedFunction } from '@doomwhite-obsidian-plugins/common';
+import {
+  ILogger,
+  Logger,
+  LoggerBuilder,
+  LogLevel,
+  sharedFunction,
+} from '@doomwhite-obsidian-plugins/common';
 import PluginUtils from '@doomwhite-obsidian-plugins/common/src/plugin-utils';
-import type { Logger } from '@doomwhite-obsidian-plugins/common/src/logging';
-import { NullException } from '@doomwhite-obsidian-plugins/common';
 
 // Remember to rename these classes and interfaces!
 
@@ -25,20 +29,60 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
   mySetting: 'default',
 };
 
-export default class PropertyEditorPlugin extends Plugin implements Logger {
+export default class PropertyEditorPlugin extends Plugin implements ILogger {
   settings: MyPluginSettings;
   utils!: PluginUtils;
+  log!: Logger;
 
   async onload() {
     await this.loadSettings();
-    if (!this.utils) throw new NullException('this.utils');
 
     console.log('Loading Plugin1');
-    this.trace('Trace', true);
-    this.debug('Debug', true);
-    this.info('Info', true);
-    this.warn('onload', 'Warn');
-    this.error('onload', 'Error');
+    this.log.trace()
+      .method('onload')
+      .values(true)
+      .execute();
+    this.log.trace()
+      .method('onload')
+      .values(true)
+      .showToast(true)
+      .execute();
+    this.log.debug()
+      .method('onload')
+      .values(true)
+      .execute();
+    this.log.debug()
+      .method('onload')
+      .values(true)
+      .showToast(true)
+      .execute();
+    this.log.info()
+      .method('onload')
+      .values(true)
+      .execute();
+    this.log.info()
+      .method('onload')
+      .values(true)
+      .showToast(true)
+      .execute();
+    this.log.warn()
+      .method('onload')
+      .values(true)
+      .execute();
+    this.log.warn()
+      .method('onload')
+      .values(true)
+      .showToast(true)
+      .execute();
+    this.log.error()
+      .method('onload')
+      .values(true)
+      .execute();
+    this.log.error()
+      .method('onload')
+      .values(true)
+      .showToast(true)
+      .execute();
     sharedFunction();
 
     // This creates an icon in the left ribbon.
@@ -58,6 +102,24 @@ export default class PropertyEditorPlugin extends Plugin implements Logger {
     statusBarItemEl.setText('Status Bar Text');
 
     // This adds a simple command that can be triggered anywhere
+    this.addCommands();
+
+    // This adds a settings tab so the user can configure various aspects of the plugin
+    this.addSettingTab(new SampleSettingTab(this.app, this));
+
+    // If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
+    // Using this function will automatically remove the event listener when this plugin is disabled.
+    this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
+      console.log('click', evt);
+    });
+
+    // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
+    this.registerInterval(
+      window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000),
+    );
+  }
+
+  private addCommands(): void {
     this.addCommand({
       id: 'open-sample-modal-simple',
       name: 'Open sample modal (simple)',
@@ -80,8 +142,7 @@ export default class PropertyEditorPlugin extends Plugin implements Logger {
       name: 'Open sample modal (complex)',
       checkCallback: (checking: boolean) => {
         // Conditions to check
-        const markdownView =
-          this.app.workspace.getActiveViewOfType(MarkdownView);
+        const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
         if (markdownView) {
           // If checking is true, we're simply "checking" if the command can be run.
           // If checking is false, then we want to actually perform the operation.
@@ -94,23 +155,9 @@ export default class PropertyEditorPlugin extends Plugin implements Logger {
         }
       },
     });
-
-    // This adds a settings tab so the user can configure various aspects of the plugin
-    this.addSettingTab(new SampleSettingTab(this.app, this));
-
-    // If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-    // Using this function will automatically remove the event listener when this plugin is disabled.
-    this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-      console.log('click', evt);
-    });
-
-    // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-    this.registerInterval(
-      window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000),
-    );
   }
 
-  onunload() {}
+  onunload() { }
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
@@ -119,51 +166,20 @@ export default class PropertyEditorPlugin extends Plugin implements Logger {
       this.settings.logLevel,
       this,
     );
+    this.createLogger(this.settings.logLevel);
   }
 
   async saveSettings() {
     await this.saveData(this.settings);
-    this.updateLogLevel(this.settings.logLevel);
   }
 
-  protected updateLogLevel(logLevel: LogLevel): void {
-    this.utils.updateLogLevel(logLevel);
-  }
-
-  toast(logLevel: LogLevel, message: string, duration?: number): void {
-    this.utils.toast(logLevel, message);
-  }
-
-  trace(
-    message: unknown | unknown[],
-    showToast?: boolean,
-    duration?: number,
-  ): void {
-    this.utils.trace(message, showToast, duration);
-  }
-
-  debug(
-    message: unknown | unknown[],
-    showToast?: boolean,
-    duration?: number,
-  ): void {
-    this.utils.debug(message, showToast, duration);
-  }
-
-  info(
-    message: unknown | unknown[],
-    showToast?: boolean,
-    duration?: number,
-  ): void {
-    this.utils.info(message, showToast, duration);
-  }
-
-  warn(methodName: string, error: unknown): void {
-    this.utils.warn(methodName, error);
-  }
-
-  error(methodName: string, error: unknown): void {
-    this.utils.error(methodName, error);
+  createLogger(logLevel: LogLevel): void {
+    this.utils.createLogger(logLevel);
+    this.log = new LoggerBuilder(this.app)
+      .name('MyPlugin')
+      .logLevel(logLevel)
+      .showToastDefault(LogLevel.Error, true)
+      .build()
   }
 }
 
