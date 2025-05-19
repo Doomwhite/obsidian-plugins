@@ -12,10 +12,17 @@ var LogLevel;
 })(LogLevel || (exports.LogLevel = LogLevel = {}));
 const toastStyles = {
     [LogLevel.Trace]: { color: '#00BFFF', fontWeight: 'normal' },
-    [LogLevel.Info]: { color: '#32CD32', fontWeight: 'normal' },
     [LogLevel.Debug]: { color: '#FFD700', fontWeight: 'normal' },
+    [LogLevel.Info]: { color: '#32CD32', fontWeight: 'normal' },
     [LogLevel.Warn]: { color: '#FFA500', fontWeight: 'bold' },
     [LogLevel.Error]: { color: '#FF6347', fontWeight: 'bold' },
+};
+const consoleFunctions = {
+    [LogLevel.Trace]: 'trace',
+    [LogLevel.Debug]: 'debug',
+    [LogLevel.Info]: 'info',
+    [LogLevel.Warn]: 'warn',
+    [LogLevel.Error]: 'error',
 };
 class LoggerBuilder {
     _name = 'default';
@@ -170,11 +177,7 @@ class LogBuilder {
             // Placeholder for custom formatting logic, e.g., apply format string
         }
         const logPrefix = `[${this._name}] [${LogLevel[this._level]}]`;
-        console[this._level === LogLevel.Warn
-            ? 'warn'
-            : this._level === LogLevel.Error
-                ? 'error'
-                : 'log'](`${logPrefix} ${message}`);
+        console[consoleFunctions[this._level]](`${logPrefix} ${message}`);
         if (this._showToast) {
             this.toast(logPrefix, message);
         }

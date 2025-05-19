@@ -50,10 +50,21 @@ interface ToastStyle {
 
 const toastStyles: Record<LogLevel, ToastStyle> = {
   [LogLevel.Trace]: { color: '#00BFFF', fontWeight: 'normal' },
-  [LogLevel.Info]: { color: '#32CD32', fontWeight: 'normal' },
   [LogLevel.Debug]: { color: '#FFD700', fontWeight: 'normal' },
+  [LogLevel.Info]: { color: '#32CD32', fontWeight: 'normal' },
   [LogLevel.Warn]: { color: '#FFA500', fontWeight: 'bold' },
   [LogLevel.Error]: { color: '#FF6347', fontWeight: 'bold' },
+};
+
+const consoleFunctions: Record<
+  LogLevel,
+  'trace' | 'debug' | 'info' | 'warn' | 'error'
+> = {
+  [LogLevel.Trace]: 'trace',
+  [LogLevel.Debug]: 'debug',
+  [LogLevel.Info]: 'info',
+  [LogLevel.Warn]: 'warn',
+  [LogLevel.Error]: 'error',
 };
 
 export class LoggerBuilder {
@@ -283,13 +294,8 @@ export class LogBuilder {
     }
 
     const logPrefix = `[${this._name}] [${LogLevel[this._level]}]`;
-    console[
-      this._level === LogLevel.Warn
-        ? 'warn'
-        : this._level === LogLevel.Error
-          ? 'error'
-          : 'log'
-    ](`${logPrefix} ${message}`);
+
+    console[consoleFunctions[this._level]](`${logPrefix} ${message}`);
 
     if (this._showToast) {
       this.toast(logPrefix, message);
