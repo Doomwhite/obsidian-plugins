@@ -21,17 +21,15 @@ class PluginUtils {
     getVaultPath() {
         try {
             const adapter = this.plugin.app.vault.adapter;
-            this.log.info()
-                .method('getVaultPath')
-                .values(adapter)
-                .execute();
+            this.log.info().method('getVaultPath').values(adapter).execute();
             if (adapter instanceof obsidian_1.FileSystemAdapter) {
                 return adapter.getBasePath();
             }
             return '';
         }
         catch (error) {
-            this.log.error()
+            this.log
+                .error()
                 .method('getVaultPath')
                 .values(error)
                 .showToast(true)

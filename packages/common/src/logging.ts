@@ -43,6 +43,19 @@ export interface ILogger {
   createLogger(logLevel: LogLevel): void;
 }
 
+interface ToastStyle {
+  color: string;
+  fontWeight: string;
+}
+
+const toastStyles: Record<LogLevel, ToastStyle> = {
+  [LogLevel.Trace]: { color: '#00BFFF', fontWeight: 'normal' },
+  [LogLevel.Info]: { color: '#32CD32', fontWeight: 'normal' },
+  [LogLevel.Debug]: { color: '#FFD700', fontWeight: 'normal' },
+  [LogLevel.Warn]: { color: '#FFA500', fontWeight: 'bold' },
+  [LogLevel.Error]: { color: '#FF6347', fontWeight: 'bold' },
+};
+
 export class LoggerBuilder {
   private _name = 'default';
   private _minLogLevel: LogLevel = LogLevel.Info;
@@ -191,6 +204,7 @@ export class LogBuilder {
   private _values: unknown[] = [];
   private _error: unknown | null = null;
   private _showToast: boolean;
+  private _toastStyles: ToastStyle | null = null;
   private _duration: number | null = null;
   private _formatting: string | null = null;
 
@@ -225,6 +239,11 @@ export class LogBuilder {
 
   showToast(value: boolean): this {
     this._showToast = value;
+    return this;
+  }
+
+  toastStyle(toastStyle: ToastStyle): this {
+    this._toastStyles = toastStyle;
     return this;
   }
 
@@ -273,14 +292,7 @@ export class LogBuilder {
     ](`${logPrefix} ${message}`);
 
     if (this._showToast) {
-      const duration =
-        this._duration ??
-        (this._level === LogLevel.Error
-          ? 0
-          : this._level === LogLevel.Warn
-            ? 5000
-            : 3000);
-      new Notice(`${logPrefix} ${message}`, duration);
+      this.toast(logPrefix, message);
     }
   }
 
@@ -296,5 +308,49 @@ export class LogBuilder {
         return String(m);
       })
       .join(' ');
+  }
+
+  private toast(logPrefix: string, message: string): void {
+    const fragment = this.createToastFragment(logPrefix, message);
+    const duration =
+      this._duration ??
+      (this._level === LogLevel.Error
+        ? 0
+        : this._level === LogLevel.Warn
+          ? 5000
+          : 3000);
+
+    new Notice(fragment, duration);
+  }
+
+  private createToastFragment(
+    logPrefix: string,
+    message: string,
+  ): DocumentFragment {
+    const fragment = document.createDocumentFragment();
+    const nameElement = this.createStyledNameElement(logPrefix);
+    const messageElement = this.createStyledMessageElement(message);
+
+    fragment.appendChild(nameElement);
+    fragment.appendChild(messageElement);
+    return fragment;
+  }
+
+  private createStyledNameElement(logPrefix: string): HTMLSpanElement {
+    const element = document.createElement('span');
+    const style = this._toastStyles ?? toastStyles[this._level];
+    element.style.color = style.color;
+    element.style.fontWeight = style.fontWeight;
+    element.textContent = `${logPrefix} `;
+    return element;
+  }
+
+  private createStyledMessageElement(message: string): HTMLSpanElement {
+    const element = document.createElement('span');
+    const style = this._toastStyles ?? toastStyles[this._level];
+    element.style.color = style.color;
+    element.style.fontWeight = style.fontWeight;
+    element.textContent = message;
+    return element;
   }
 }

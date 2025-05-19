@@ -10,6 +10,13 @@ var LogLevel;
     LogLevel[LogLevel["Warn"] = 3] = "Warn";
     LogLevel[LogLevel["Error"] = 4] = "Error";
 })(LogLevel || (exports.LogLevel = LogLevel = {}));
+const toastStyles = {
+    [LogLevel.Trace]: { color: '#00BFFF', fontWeight: 'normal' },
+    [LogLevel.Info]: { color: '#32CD32', fontWeight: 'normal' },
+    [LogLevel.Debug]: { color: '#FFD700', fontWeight: 'normal' },
+    [LogLevel.Warn]: { color: '#FFA500', fontWeight: 'bold' },
+    [LogLevel.Error]: { color: '#FF6347', fontWeight: 'bold' },
+};
 class LoggerBuilder {
     _name = 'default';
     _minLogLevel = LogLevel.Info;
@@ -102,6 +109,7 @@ class LogBuilder {
     _values = [];
     _error = null;
     _showToast;
+    _toastStyles = null;
     _duration = null;
     _formatting = null;
     constructor(app, name, level, minLogLevel, defaultShowToast) {
@@ -127,6 +135,10 @@ class LogBuilder {
         this._showToast = value;
         return this;
     }
+    toastStyle(toastStyle) {
+        this._toastStyles = toastStyle;
+        return this;
+    }
     duration(value) {
         this._duration = value;
         return this;
@@ -143,7 +155,9 @@ class LogBuilder {
         }
         let message = '';
         if (this._error) {
-            const errorMessage = this._error instanceof Error ? `${this._error.message}\n${this._error.stack}` : String(this._error);
+            const errorMessage = this._error instanceof Error
+                ? `${this._error.message}\n${this._error.stack}`
+                : String(this._error);
             message = `Error in ${this._methodName || 'unknown'}: ${errorMessage}`;
             if (this._values.length > 0) {
                 message += ` - ${this.formatMessage(this._values)}`;
@@ -156,24 +170,61 @@ class LogBuilder {
             // Placeholder for custom formatting logic, e.g., apply format string
         }
         const logPrefix = `[${this._name}] [${LogLevel[this._level]}]`;
-        console[this._level === LogLevel.Warn ? 'warn' : this._level === LogLevel.Error ? 'error' : 'log'](`${logPrefix} ${message}`);
+        console[this._level === LogLevel.Warn
+            ? 'warn'
+            : this._level === LogLevel.Error
+                ? 'error'
+                : 'log'](`${logPrefix} ${message}`);
         if (this._showToast) {
-            const duration = this._duration ?? (this._level === LogLevel.Error ? 0 : this._level === LogLevel.Warn ? 5000 : 3000);
-            new obsidian_1.Notice(`${logPrefix} ${message}`, duration);
+            this.toast(logPrefix, message);
         }
     }
     formatMessage(messages) {
-        return messages.map(m => {
+        return messages
+            .map((m) => {
             if (m instanceof Error) {
                 return `${m.message}\n${m.stack}`;
             }
-            else if (typeof m === 'object') {
+            if (typeof m === 'object') {
                 return JSON.stringify(m, null, 2);
             }
-            else {
-                return String(m);
-            }
-        }).join(' ');
+            return String(m);
+        })
+            .join(' ');
+    }
+    toast(logPrefix, message) {
+        const fragment = this.createToastFragment(logPrefix, message);
+        const duration = this._duration ??
+            (this._level === LogLevel.Error
+                ? 0
+                : this._level === LogLevel.Warn
+                    ? 5000
+                    : 3000);
+        new obsidian_1.Notice(fragment, duration);
+    }
+    createToastFragment(logPrefix, message) {
+        const fragment = document.createDocumentFragment();
+        const nameElement = this.createStyledNameElement(logPrefix);
+        const messageElement = this.createStyledMessageElement(message);
+        fragment.appendChild(nameElement);
+        fragment.appendChild(messageElement);
+        return fragment;
+    }
+    createStyledNameElement(logPrefix) {
+        const element = document.createElement('span');
+        const style = this._toastStyles ?? toastStyles[this._level];
+        element.style.color = style.color;
+        element.style.fontWeight = style.fontWeight;
+        element.textContent = `${logPrefix} `;
+        return element;
+    }
+    createStyledMessageElement(message) {
+        const element = document.createElement('span');
+        const style = this._toastStyles ?? toastStyles[this._level];
+        element.style.color = style.color;
+        element.style.fontWeight = style.fontWeight;
+        element.textContent = message;
+        return element;
     }
 }
 exports.LogBuilder = LogBuilder;

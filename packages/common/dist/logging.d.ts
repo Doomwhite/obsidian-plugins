@@ -1,4 +1,4 @@
-import { App } from 'obsidian';
+import { type App } from 'obsidian';
 export declare enum LogLevel {
     Trace = 0,
     Debug = 1,
@@ -9,6 +9,10 @@ export declare enum LogLevel {
 export interface ILogger {
     log: Logger;
     createLogger(logLevel: LogLevel): void;
+}
+interface ToastStyle {
+    color: string;
+    fontWeight: string;
 }
 export declare class LoggerBuilder {
     private _name;
@@ -47,6 +51,7 @@ export declare class LogBuilder {
     private _values;
     private _error;
     private _showToast;
+    private _toastStyles;
     private _duration;
     private _formatting;
     constructor(app: App, name: string, level: LogLevel, minLogLevel: LogLevel, defaultShowToast?: boolean);
@@ -54,8 +59,14 @@ export declare class LogBuilder {
     values(...args: unknown[]): this;
     error(err: unknown): this;
     showToast(value: boolean): this;
+    toastStyle(toastStyle: ToastStyle): this;
     duration(value: number): this;
     formatting(value: string): this;
     execute(...messages: unknown[]): void;
     private formatMessage;
+    private toast;
+    private createToastFragment;
+    private createStyledNameElement;
+    private createStyledMessageElement;
 }
+export {};

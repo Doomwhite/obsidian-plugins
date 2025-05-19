@@ -1,5 +1,5 @@
 import { type Plugin } from 'obsidian';
-import { ILogger, Logger, LogLevel } from './logging';
+import { type ILogger, type Logger, LogLevel } from './logging';
 export default class PluginUtils implements ILogger {
     readonly plugin: Plugin;
     readonly name: string;
