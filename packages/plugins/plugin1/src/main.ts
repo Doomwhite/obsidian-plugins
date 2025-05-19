@@ -39,51 +39,16 @@ export default class MyPlugin extends Plugin implements ILogger {
     await this.loadSettings();
 
     console.log('Loading Plugin1');
-    this.log.trace()
-      .method('onload')
-      .values(true)
-      .execute();
-    this.log.trace()
-      .method('onload')
-      .values(true)
-      .showToast(true)
-      .execute();
-    this.log.debug()
-      .method('onload')
-      .values(true)
-      .execute();
-    this.log.debug()
-      .method('onload')
-      .values(true)
-      .showToast(true)
-      .execute();
-    this.log.info()
-      .method('onload')
-      .values(true)
-      .execute();
-    this.log.info()
-      .method('onload')
-      .values(true)
-      .showToast(true)
-      .execute();
-    this.log.warn()
-      .method('onload')
-      .values(true)
-      .execute();
-    this.log.warn()
-      .method('onload')
-      .values(true)
-      .showToast(true)
-      .execute();
-    this.log.error()
-      .method('onload')
-      .values(true)
-      .execute();
-    this.log.error()
-      .method('onload')
-      .values(true)
-      .showToast(true)
-      .execute();
+    this.log.trace().method('onload').values(true).execute();
+    this.log.trace().method('onload').values(true).showToast(true).execute();
+    this.log.debug().method('onload').values(true).execute();
+    this.log.debug().method('onload').values(true).showToast(true).execute();
+    this.log.info().method('onload').values(true).execute();
+    this.log.info().method('onload').values(true).showToast(true).execute();
+    this.log.warn().method('onload').values(true).execute();
+    this.log.warn().method('onload').values(true).showToast(true).execute();
+    this.log.error().method('onload').values(true).execute();
+    this.log.error().method('onload').values(true).showToast(true).execute();
     sharedFunction();
 
     // This creates an icon in the left ribbon.
@@ -143,7 +108,8 @@ export default class MyPlugin extends Plugin implements ILogger {
       name: 'Open sample modal (complex)',
       checkCallback: (checking: boolean) => {
         // Conditions to check
-        const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+        const markdownView =
+          this.app.workspace.getActiveViewOfType(MarkdownView);
         if (markdownView) {
           // If checking is true, we're simply "checking" if the command can be run.
           // If checking is false, then we want to actually perform the operation.
@@ -158,7 +124,7 @@ export default class MyPlugin extends Plugin implements ILogger {
     });
   }
 
-  onunload() { }
+  onunload() {}
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
@@ -180,7 +146,7 @@ export default class MyPlugin extends Plugin implements ILogger {
       .name('MyPlugin')
       .logLevel(logLevel)
       .showToastDefault(LogLevel.Error, true)
-      .build()
+      .build();
   }
 }
 

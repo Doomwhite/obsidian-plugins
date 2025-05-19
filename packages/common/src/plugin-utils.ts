@@ -17,22 +17,20 @@ export default class PluginUtils implements ILogger {
       .name('PluginUtils')
       .logLevel(logLevel)
       .showToastDefault(LogLevel.Error, true)
-      .build()
+      .build();
   }
 
   getVaultPath(): string {
     try {
       const adapter = this.plugin.app.vault.adapter;
-      this.log.info()
-        .method('getVaultPath')
-        .values(adapter)
-        .execute();
+      this.log.info().method('getVaultPath').values(adapter).execute();
       if (adapter instanceof FileSystemAdapter) {
         return adapter.getBasePath();
       }
       return '';
     } catch (error) {
-      this.log.error()
+      this.log
+        .error()
         .method('getVaultPath')
         .values(error)
         .showToast(true)

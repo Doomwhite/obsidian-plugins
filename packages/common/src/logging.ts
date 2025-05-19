@@ -38,7 +38,6 @@ export enum LogLevel {
 //   }
 // }
 
-
 export interface ILogger {
   log: Logger;
   createLogger(logLevel: LogLevel): void;
@@ -70,7 +69,12 @@ export class LoggerBuilder {
   }
 
   build(): Logger {
-    return new Logger(this._app, this._name, this._minLogLevel, this._showToastDefaults);
+    return new Logger(
+      this._app,
+      this._name,
+      this._minLogLevel,
+      this._showToastDefaults,
+    );
   }
 }
 
@@ -80,7 +84,12 @@ export class Logger {
   private _minLogLevel: LogLevel;
   private _showToastDefaults: Partial<Record<LogLevel, boolean>>;
 
-  constructor(app: App, name: string, minLogLevel: LogLevel, showToastDefaults: Partial<Record<LogLevel, boolean>>) {
+  constructor(
+    app: App,
+    name: string,
+    minLogLevel: LogLevel,
+    showToastDefaults: Partial<Record<LogLevel, boolean>>,
+  ) {
     this._app = app;
     this._name = name;
     this._minLogLevel = minLogLevel;
@@ -90,7 +99,13 @@ export class Logger {
   trace(message: string): void;
   trace(): LogBuilder;
   trace(message?: string): LogBuilder | void {
-    const builder = new LogBuilder(this._app, this._name, LogLevel.Trace, this._minLogLevel, this._showToastDefaults[LogLevel.Trace]);
+    const builder = new LogBuilder(
+      this._app,
+      this._name,
+      LogLevel.Trace,
+      this._minLogLevel,
+      this._showToastDefaults[LogLevel.Trace],
+    );
     if (message !== undefined) {
       builder.execute(message);
     } else {
@@ -101,7 +116,13 @@ export class Logger {
   debug(message: string): void;
   debug(): LogBuilder;
   debug(message?: string): LogBuilder | void {
-    const builder = new LogBuilder(this._app, this._name, LogLevel.Debug, this._minLogLevel, this._showToastDefaults[LogLevel.Debug]);
+    const builder = new LogBuilder(
+      this._app,
+      this._name,
+      LogLevel.Debug,
+      this._minLogLevel,
+      this._showToastDefaults[LogLevel.Debug],
+    );
     if (message !== undefined) {
       builder.execute(message);
     } else {
@@ -112,7 +133,13 @@ export class Logger {
   info(message: string): void;
   info(): LogBuilder;
   info(message?: string): LogBuilder | void {
-    const builder = new LogBuilder(this._app, this._name, LogLevel.Info, this._minLogLevel, this._showToastDefaults[LogLevel.Info]);
+    const builder = new LogBuilder(
+      this._app,
+      this._name,
+      LogLevel.Info,
+      this._minLogLevel,
+      this._showToastDefaults[LogLevel.Info],
+    );
     if (message !== undefined) {
       builder.execute(message);
     } else {
@@ -123,7 +150,13 @@ export class Logger {
   warn(message: string): void;
   warn(): LogBuilder;
   warn(message?: string): LogBuilder | void {
-    const builder = new LogBuilder(this._app, this._name, LogLevel.Warn, this._minLogLevel, this._showToastDefaults[LogLevel.Warn] ?? true);
+    const builder = new LogBuilder(
+      this._app,
+      this._name,
+      LogLevel.Warn,
+      this._minLogLevel,
+      this._showToastDefaults[LogLevel.Warn] ?? true,
+    );
     if (message !== undefined) {
       builder.execute(message);
     } else {
@@ -134,7 +167,13 @@ export class Logger {
   error(message: string): void;
   error(): LogBuilder;
   error(message?: string) {
-    const builder = new LogBuilder(this._app, this._name, LogLevel.Error, this._minLogLevel, this._showToastDefaults[LogLevel.Error] ?? true);
+    const builder = new LogBuilder(
+      this._app,
+      this._name,
+      LogLevel.Error,
+      this._minLogLevel,
+      this._showToastDefaults[LogLevel.Error] ?? true,
+    );
     if (message !== undefined) {
       builder.execute(message);
     } else {
@@ -155,7 +194,13 @@ export class LogBuilder {
   private _duration: number | null = null;
   private _formatting: string | null = null;
 
-  constructor(app: App, name: string, level: LogLevel, minLogLevel: LogLevel, defaultShowToast?: boolean) {
+  constructor(
+    app: App,
+    name: string,
+    level: LogLevel,
+    minLogLevel: LogLevel,
+    defaultShowToast?: boolean,
+  ) {
     this._app = app;
     this._name = name;
     this._level = level;
@@ -202,7 +247,10 @@ export class LogBuilder {
 
     let message = '';
     if (this._error) {
-      const errorMessage = this._error instanceof Error ? `${this._error.message}\n${this._error.stack}` : String(this._error);
+      const errorMessage =
+        this._error instanceof Error
+          ? `${this._error.message}\n${this._error.stack}`
+          : String(this._error);
       message = `Error in ${this._methodName || 'unknown'}: ${errorMessage}`;
       if (this._values.length > 0) {
         message += ` - ${this.formatMessage(this._values)}`;
@@ -216,23 +264,37 @@ export class LogBuilder {
     }
 
     const logPrefix = `[${this._name}] [${LogLevel[this._level]}]`;
-    console[this._level === LogLevel.Warn ? 'warn' : this._level === LogLevel.Error ? 'error' : 'log'](`${logPrefix} ${message}`);
+    console[
+      this._level === LogLevel.Warn
+        ? 'warn'
+        : this._level === LogLevel.Error
+          ? 'error'
+          : 'log'
+    ](`${logPrefix} ${message}`);
 
     if (this._showToast) {
-      const duration = this._duration ?? (this._level === LogLevel.Error ? 0 : this._level === LogLevel.Warn ? 5000 : 3000);
+      const duration =
+        this._duration ??
+        (this._level === LogLevel.Error
+          ? 0
+          : this._level === LogLevel.Warn
+            ? 5000
+            : 3000);
       new Notice(`${logPrefix} ${message}`, duration);
     }
   }
 
   private formatMessage(messages: unknown[]): string {
-    return messages.map(m => {
-      if (m instanceof Error) {
-        return `${m.message}\n${m.stack}`;
-      } else if (typeof m === 'object') {
-        return JSON.stringify(m, null, 2);
-      } else {
-        return String(m);
-      }
-    }).join(' ');
+    return messages
+      .map((m) => {
+        if (m instanceof Error) {
+          return `${m.message}\n${m.stack}`;
+        } else if (typeof m === 'object') {
+          return JSON.stringify(m, null, 2);
+        } else {
+          return String(m);
+        }
+      })
+      .join(' ');
   }
 }
