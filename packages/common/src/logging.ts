@@ -1,4 +1,4 @@
-import { Notice, App } from 'obsidian';
+import { Notice, type App } from 'obsidian';
 
 export enum LogLevel {
   Trace = 0,
@@ -44,7 +44,7 @@ export interface ILogger {
 }
 
 export class LoggerBuilder {
-  private _name: string = 'default';
+  private _name = 'default';
   private _minLogLevel: LogLevel = LogLevel.Info;
   private _showToastDefaults: Partial<Record<LogLevel, boolean>> = {};
   private _app: App;
@@ -98,7 +98,7 @@ export class Logger {
 
   trace(message: string): void;
   trace(): LogBuilder;
-  trace(message?: string): LogBuilder | void {
+  trace(message?: string) {
     const builder = new LogBuilder(
       this._app,
       this._name,
@@ -115,7 +115,7 @@ export class Logger {
 
   debug(message: string): void;
   debug(): LogBuilder;
-  debug(message?: string): LogBuilder | void {
+  debug(message?: string) {
     const builder = new LogBuilder(
       this._app,
       this._name,
@@ -132,7 +132,7 @@ export class Logger {
 
   info(message: string): void;
   info(): LogBuilder;
-  info(message?: string): LogBuilder | void {
+  info(message?: string) {
     const builder = new LogBuilder(
       this._app,
       this._name,
@@ -149,7 +149,7 @@ export class Logger {
 
   warn(message: string): void;
   warn(): LogBuilder;
-  warn(message?: string): LogBuilder | void {
+  warn(message?: string) {
     const builder = new LogBuilder(
       this._app,
       this._name,
@@ -289,11 +289,11 @@ export class LogBuilder {
       .map((m) => {
         if (m instanceof Error) {
           return `${m.message}\n${m.stack}`;
-        } else if (typeof m === 'object') {
-          return JSON.stringify(m, null, 2);
-        } else {
-          return String(m);
         }
+        if (typeof m === 'object') {
+          return JSON.stringify(m, null, 2);
+        }
+        return String(m);
       })
       .join(' ');
   }

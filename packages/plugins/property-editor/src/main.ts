@@ -9,8 +9,8 @@ import {
   Setting,
 } from 'obsidian';
 import {
-  ILogger,
-  Logger,
+  type ILogger,
+  type Logger,
   LoggerBuilder,
   LogLevel,
   sharedFunction,

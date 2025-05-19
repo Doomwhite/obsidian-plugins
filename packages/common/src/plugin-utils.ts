@@ -1,5 +1,5 @@
 import { FileSystemAdapter, type Plugin } from 'obsidian';
-import { ILogger, Logger, LoggerBuilder, LogLevel } from './logging';
+import { type ILogger, type Logger, LoggerBuilder, LogLevel } from './logging';
 
 export default class PluginUtils implements ILogger {
   readonly plugin: Plugin;
